@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Secrets / local state — defence in depth.
+# Skills should write tokens to ~/.hermes/state/, never inside the repo,
+# but ignore these patterns just in case.
+.env
+.env.*
+*tokens*.json
+*secrets*.json
