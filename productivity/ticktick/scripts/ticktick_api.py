@@ -156,24 +156,6 @@ def _format_due(iso: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Inbox detection
-# ---------------------------------------------------------------------------
-
-def _inbox_project_id() -> str:
-    """Resolve the Inbox project id.
-
-    TickTick's `/project` list omits the Inbox. The Inbox id has the stable form
-    `inbox<userId>`, and `/project/inbox/data` returns it as `projectData.id`.
-    """
-    data = _request("GET", "/project/inbox/data")
-    if isinstance(data, dict):
-        pdata = data.get("projectData") or {}
-        if isinstance(pdata, dict) and pdata.get("id"):
-            return str(pdata["id"])
-    sys.exit("Could not resolve TickTick Inbox project id.")
-
-
-# ---------------------------------------------------------------------------
 # Subcommands
 # ---------------------------------------------------------------------------
 
@@ -192,8 +174,11 @@ def cmd_list_projects(_: argparse.Namespace) -> None:
 
 
 def cmd_list_tasks(args: argparse.Namespace) -> None:
-    project_id = args.project or _inbox_project_id()
-    data = _request("GET", f"/project/{project_id}/data") or {}
+    # `/project/inbox/data` is the special endpoint for the Inbox; for any
+    # other project the id goes in the URL. TickTick does not expose the
+    # Inbox in `/project`, so falling back via that path doesn't work.
+    path = f"/project/{args.project}/data" if args.project else "/project/inbox/data"
+    data = _request("GET", path) or {}
     print(json.dumps(data.get("tasks", []), indent=2))
 
 
