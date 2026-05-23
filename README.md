@@ -6,13 +6,6 @@ Shaped around one person's workflows (mine) — published openly for transparenc
 
 ## Layout
 
-```
-.
-├── productivity/
-│   └── ticktick/          # TickTick OAuth task & reminder integration
-└── …                      # more categories as I add skills
-```
-
 Each skill is a directory containing a `SKILL.md` (frontmatter + prose) and any `scripts/`, `references/`, or `assets/` it needs. The category layer (`productivity/`, etc.) is convention, not required by the standard.
 
 ## What's a "skill"?
@@ -47,12 +40,6 @@ Symlinks (not copies) so `git pull` is the only sync step.
 
 Each skill has its own `SKILL.md` with prerequisites (env vars, OAuth flows). Check those before first use.
 
-### Current skills
-
-| Skill | Path | Setup |
-|---|---|---|
-| TickTick | `productivity/ticktick/` | Set `TICKTICK_CLIENT_ID` + `TICKTICK_CLIENT_SECRET`, run `scripts/auth.py` once |
-
 ## Secrets
 
 Nothing sensitive is committed. OAuth tokens, API keys, and client secrets live in:
@@ -60,7 +47,3 @@ Nothing sensitive is committed. OAuth tokens, API keys, and client secrets live 
 - Per-runtime state directories (e.g. `~/.hermes/state/<skill>/…`, with `0600` perms on token files)
 
 If you fork or copy a skill, double-check `.gitignore` covers any local cache files the skill writes.
-
-## License
-
-MIT — see [LICENSE](LICENSE).
