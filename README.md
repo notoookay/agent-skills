@@ -1,8 +1,8 @@
 # agent-skills
 
-**Personal skills for [Hermes Agent](https://github.com/NousResearch/hermes-agent).** These are shaped around one person's workflows (mine) — published openly for transparency and so others can crib patterns, but **not maintained as a community project**.
+**Personal agent skills, packaged to the [agentskills.io](https://agentskills.io) open standard.** Drop-in compatible with any agent runtime that loads `SKILL.md`-format skills — Hermes Agent, Claude Code, and others.
 
-> If you want broadly-useful skills, look at Hermes's bundled `skills/` and `optional-skills/` directories first.
+Shaped around one person's workflows (mine) — published openly for transparency and so others can crib patterns, but **not maintained as a community project**. If you want broadly-useful skills, check each agent runtime's own bundled skills first.
 
 ## Layout
 
@@ -13,23 +13,39 @@
 └── …                      # more categories as I add skills
 ```
 
-The layout mirrors `~/.hermes/skills/<category>/<skill>/` so each skill folder can be dropped straight into a Hermes install.
+Each skill is a directory containing a `SKILL.md` (frontmatter + prose) and any `scripts/`, `references/`, or `assets/` it needs. The category layer (`productivity/`, etc.) is convention, not required by the standard.
 
-## Install on a new machine
+## What's a "skill"?
+
+A self-contained folder describing a capability — what env vars / CLIs it needs, how to invoke it, and (optionally) helper scripts. The runtime reads `SKILL.md` and exposes the skill to the agent. See [agentskills.io](https://agentskills.io) for the spec.
+
+## Install
+
+Clone wherever you keep code:
 
 ```bash
 git clone https://github.com/notoookay/agent-skills.git ~/code/agent-skills
+```
 
-# Symlink each category dir's contents into ~/.hermes/skills/<category>/
+Then expose individual skill folders to your agent of choice. Examples:
+
+**Hermes Agent**
+```bash
 mkdir -p ~/.hermes/skills/productivity
 ln -s ~/code/agent-skills/productivity/ticktick ~/.hermes/skills/productivity/ticktick
 ```
 
-Symlinks (not copies) so `git pull` in `~/code/agent-skills` is the only sync step. Hermes discovers skills by scanning `~/.hermes/skills/**/SKILL.md` — symlinked directories work the same as real ones.
+**Claude Code**
+```bash
+mkdir -p ~/.claude/skills
+ln -s ~/code/agent-skills/productivity/ticktick ~/.claude/skills/ticktick
+```
+
+Symlinks (not copies) so `git pull` is the only sync step.
 
 ## Per-skill setup
 
-Each skill folder has its own `SKILL.md` with prerequisites (env vars, OAuth flows, etc.). Check those before first use.
+Each skill has its own `SKILL.md` with prerequisites (env vars, OAuth flows). Check those before first use.
 
 ### Current skills
 
@@ -40,8 +56,8 @@ Each skill folder has its own `SKILL.md` with prerequisites (env vars, OAuth flo
 ## Secrets
 
 Nothing sensitive is committed. OAuth tokens, API keys, and client secrets live in:
-- Env vars on the host (`~/.hermes/.env` or your shell rc)
-- Hermes state dir: `~/.hermes/state/<skill>/…` (token files, `0600` perms)
+- Env vars on the host (your shell rc, or your runtime's `.env`)
+- Per-runtime state directories (e.g. `~/.hermes/state/<skill>/…`, with `0600` perms on token files)
 
 If you fork or copy a skill, double-check `.gitignore` covers any local cache files the skill writes.
 
